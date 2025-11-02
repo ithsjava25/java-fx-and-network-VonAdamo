@@ -16,6 +16,7 @@ public class HelloFX extends Application {
         stage.setTitle("Hello MVC");
         stage.setScene(scene);
         stage.show();
+
     }
 
     public static void main(String[] args) {
