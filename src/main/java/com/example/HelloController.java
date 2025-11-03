@@ -15,8 +15,10 @@ public class HelloController {
 
     @FXML
     private void initialize() {
-        if (messageLabel != null) {
-            messageLabel.setText(model.getGreeting());
-        }
+
+    }
+
+    public HelloModel getModel() {
+        return model;
     }
 }
