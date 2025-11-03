@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.control.Label?>
-
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
 <VBox stylesheets="@../../css/style.css" alignment="CENTER" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.example.HelloController">
-    <Label fx:id="messageLabel" text="0 points"/>
+    <Label fx:id="messageLabel" text="${controller.model.points}"/>
     <HBox alignment="CENTER" spacing="20.0">
-        <ImageView image="${controller.model.noSmash}"/>
-        <ImageView image="${controller.model.noSmash}"/>
-        <ImageView image="${controller.model.noSmash}"/>
+        <ImageView image="${controller.model.first}" onMouseClicked="#image1"/>
+        <ImageView image="${controller.model.second}" onMouseClicked="#image2"/>
+        <ImageView image="${controller.model.third}" onMouseClicked="#image3"/>
     </HBox>
 </VBox>
