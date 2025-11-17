@@ -1,25 +1,33 @@
 package com.example;
 
-import java.util.Collections;
+import java.io.FileNotFoundException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class NtfyConnectionSpy implements NtfyConnection {
+class NtfyConnectionSpy implements NtfyConnection {
 
-    String message;
+    String lastMessage;
+    Path lastFilePath;
 
     @Override
     public boolean send(String message) {
-        this.message = message;
+        this.lastMessage = message;
         return true;
     }
 
     @Override
-    public void receive(Consumer<NtfyMessageDto> messageHandler) {
+    public void receive(Consumer<NtfyMessageDto> handler) {
     }
 
     @Override
     public List<NtfyMessageDto> fetchHistory() {
-        return Collections.emptyList();
+        return List.of();
+    }
+
+    @Override
+    public boolean sendFile(Path path) throws FileNotFoundException {
+        this.lastFilePath = path;
+        return true;
     }
 }
