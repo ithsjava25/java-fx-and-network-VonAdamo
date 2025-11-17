@@ -1,25 +1,29 @@
 package com.example;
 
-import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import javafx.application.Platform;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import java.awt.*;
+
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import org.awaitility.Awaitility;
 
 @WireMockTest
 class HelloModelTest {
 
     @BeforeAll
     static void initFx() {
-        System.setProperty("java.awt.headless", "true");
+        // Skip JavaFX initialization on headless/CI to avoid Glass failures
+        if (GraphicsEnvironment.isHeadless() || "true".equalsIgnoreCase(System.getenv("CI"))) {
+            return;
+        }
         try {
-            Platform.startup(()->{});
-        } catch (IllegalArgumentException ignored) {
-            // Toolkit already initialized
+            Platform.startup(() -> {});
+        } catch (IllegalStateException | IllegalArgumentException ignored) {
+            // Already initialized or not applicable
         }
     }
 
