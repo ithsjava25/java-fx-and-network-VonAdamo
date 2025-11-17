@@ -9,14 +9,13 @@ import org.junit.jupiter.api.Test;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.awaitility.Awaitility;
-import org.junit.jupiter.api.BeforeAll;
 
 @WireMockTest
 class HelloModelTest {
 
     @BeforeAll
     static void initFx() {
-        // Initialize JavaFX Toolkit
+        System.setProperty("java.awt.headless", "true");
         try {
             Platform.startup(()->{});
         } catch (IllegalArgumentException ignored) {
