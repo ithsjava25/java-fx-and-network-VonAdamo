@@ -31,6 +31,16 @@ public class HelloController {
     @FXML private ListView<NtfyMessageDto> messageView;
     @FXML private TextArea messageInput;
 
+    /**
+     * Initializes the message view and UI bindings for the controller.
+     *
+     * Binds the ListView to the model's message list and installs a custom cell factory that displays
+     * message text and, when present, an attachment as a clickable hyperlink (uses the attachment
+     * name or "Attachment", shows a tooltip with human-readable size and optional type, and opens the
+     * attachment URL in the system browser). Registers a listener to auto-scroll to the newest message
+     * on list changes, installs drag-and-drop handlers that delegate to handleDragOver/handleDragDropped,
+     * and triggers asynchronous loading of initial messages from the model.
+     */
     @FXML private void initialize() {
         messageView.setItems(model.getMessages());
         messageView.setCellFactory(lv -> new ListCell<>() {
@@ -82,6 +92,13 @@ public class HelloController {
         model.loadInitialMessagesAsync();
     }
 
+    /**
+     * Opens a file chooser titled "Välj fil att skicka" and, if the user selects a file, sends it to the model.
+     *
+     * If the dialog is cancelled, no action is taken.
+     *
+     * @throws FileNotFoundException if the selected file cannot be found when attempting to send it
+     */
     @FXML public void sendFile(ActionEvent actionEvent) throws FileNotFoundException {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Välj fil att skicka");
@@ -92,6 +109,13 @@ public class HelloController {
         }
     }
 
+    /**
+     * Send the text currently entered in the message input to the model and clear the input if sending succeeds.
+     *
+     * Does nothing when the input is blank or when the model declines to send the message.
+     *
+     * @param actionEvent the UI event that triggered this send action
+     */
     public void sendMessage(ActionEvent actionEvent) {
         String text = messageInput != null ? messageInput.getText() : "";
         if (text != null && !text.isBlank() && model.sendMessage(text)) {
@@ -99,6 +123,11 @@ public class HelloController {
         }
     }
 
+    /**
+     * Accepts copy transfer when the drag contains files and consumes the drag event.
+     *
+     * @param e the drag event whose dragboard is inspected for files
+     */
     private void handleDragOver(DragEvent e) {
         Dragboard db = e.getDragboard();
         if (db.hasFiles()) {
@@ -107,6 +136,15 @@ public class HelloController {
         e.consume();
     }
 
+    /**
+     * Handle files dropped onto the message view and send each file through the model.
+     *
+     * Processes any files on the dragboard, attempts to send each file via model.sendFile(...),
+     * marks the drop as completed when at least one file is processed, and consumes the event.
+     *
+     * @param e the drag event containing the dropped data
+     * @throws RuntimeException if a dropped file cannot be found when attempting to send it
+     */
     private void handleDragDropped(DragEvent e) {
         Dragboard db = e.getDragboard();
         boolean success = false;
@@ -125,6 +163,14 @@ public class HelloController {
         e.consume();
     }
 
+    /**
+     * Attempts to open the given URL in the system default web browser.
+     *
+     * If the Java Desktop API is not supported or an error occurs while opening the URL,
+     * the method returns silently without throwing an exception.
+     *
+     * @param url the URL to open; expected to be a valid absolute URI string (for example, "https://example.com")
+     */
     private void openInBrowser(String url) {
         try {
             if (Desktop.isDesktopSupported()) {
@@ -136,6 +182,12 @@ public class HelloController {
         }
     }
 
+    /**
+     * Convert a byte count into a human-readable string using units B, KB, MB, GB, TB.
+     *
+     * @param bytes the size in bytes
+     * @return the formatted size with one decimal place and an appropriate unit (for example, "1.2 MB")
+     */
     private static String humanSize(long bytes) {
         // kort & enkel
         String[] units = {"B","KB","MB","GB","TB"};
